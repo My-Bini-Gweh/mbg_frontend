@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { STUDENT_NAV_ITEMS } from "@/lib/constants";
-import { studentProfile } from "@/data/mock";
 
 export default function StudentDashboardLayout({
   children,
@@ -13,7 +12,7 @@ export default function StudentDashboardLayout({
       navItems={STUDENT_NAV_ITEMS}
       title="Dashboard Mahasiswa"
       subtitle="CampusPay Student"
-      userLabel={`${studentProfile.name} / ${studentProfile.campusPayId}`}
+      userLabel="Mahasiswa"
     >
       {children}
     </DashboardLayout>

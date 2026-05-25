@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TransactionTable } from "@/components/tables/TransactionTable";
-import { transactions as mockTransactions } from "@/data/mock";
 import { getSession, getTransactions } from "@/lib/api";
 import type { Transaction } from "@/types";
 
 export function TransactionsView() {
   const router = useRouter();
-  const [transactions, setTransactions] =
-    useState<Transaction[]>(mockTransactions);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [status, setStatus] = useState("Memuat riwayat transaksi...");
 
   useEffect(() => {
@@ -27,7 +25,7 @@ export function TransactionsView() {
         const rows = await getTransactions(session.token);
         if (active) {
           setTransactions(rows);
-          setStatus("Riwayat transaksi dari backend.");
+          setStatus("Riwayat transaksi tersinkron dari server.");
         }
       } catch (err) {
         if (active) {
@@ -55,7 +53,10 @@ export function TransactionsView() {
         </h2>
         <p className="mt-1 text-sm leading-6 text-slate-500">{status}</p>
       </div>
-      <TransactionTable transactions={transactions} />
+      <TransactionTable
+        transactions={transactions}
+        detailBasePath="/dashboard/transactions"
+      />
     </div>
   );
 }

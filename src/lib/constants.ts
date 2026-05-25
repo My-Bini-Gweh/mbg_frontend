@@ -6,7 +6,6 @@ export const TRANSACTION_TYPE_FILTERS: Array<TransactionType | "ALL"> = [
   "ALL",
   "TOPUP",
   "PAYMENT",
-  "TRANSFER",
 ];
 
 export const TRANSACTION_STATUS_FILTERS: Array<TransactionStatus | "ALL"> = [

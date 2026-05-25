@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuditLogTable } from "@/components/tables/AuditLogTable";
-import { auditLogs as mockAuditLogs } from "@/data/mock";
 import { getAuditLogs, getSession } from "@/lib/api";
 import type { AuditLog } from "@/types";
 
 export function AdminAuditLogsView() {
   const router = useRouter();
-  const [logs, setLogs] = useState<AuditLog[]>(mockAuditLogs);
+  const [logs, setLogs] = useState<AuditLog[]>([]);
   const [status, setStatus] = useState("Memuat audit logs...");
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export function AdminAuditLogsView() {
         const rows = await getAuditLogs(session.token);
         if (active) {
           setLogs(rows);
-          setStatus("Audit logs dari backend.");
+          setStatus("Audit logs tersinkron dari server.");
         }
       } catch (err) {
         if (active) {

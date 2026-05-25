@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TransactionTable } from "@/components/tables/TransactionTable";
-import { transactions as mockTransactions } from "@/data/mock";
 import { getAdminTransactions, getSession } from "@/lib/api";
 import type { Transaction } from "@/types";
 
 export function AdminTransactionsView() {
   const router = useRouter();
-  const [transactions, setTransactions] =
-    useState<Transaction[]>(mockTransactions);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [status, setStatus] = useState("Memuat transaksi admin...");
 
   useEffect(() => {
@@ -27,7 +25,7 @@ export function AdminTransactionsView() {
         const rows = await getAdminTransactions(session.token);
         if (active) {
           setTransactions(rows);
-          setStatus("Transaksi dari backend.");
+          setStatus("Transaksi tersinkron dari server.");
         }
       } catch (err) {
         if (active) {

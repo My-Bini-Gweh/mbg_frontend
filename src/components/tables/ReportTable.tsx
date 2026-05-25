@@ -17,7 +17,7 @@ export function ReportTable({ reports }: ReportTableProps) {
               <th className="px-4 py-3 font-semibold">Total Amount</th>
               <th className="px-4 py-3 font-semibold">Total Topup</th>
               <th className="px-4 py-3 font-semibold">Total Payment</th>
-              <th className="px-4 py-3 font-semibold">Total Transfer</th>
+              <th className="px-4 py-3 font-semibold">Successful Tx</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -39,7 +39,7 @@ export function ReportTable({ reports }: ReportTableProps) {
                   {formatCurrency(report.totalPayment)}
                 </td>
                 <td className="whitespace-nowrap px-4 py-4 text-slate-700">
-                  {formatCurrency(report.totalTransfer)}
+                  {report.totalSuccessfulTransactions}
                 </td>
               </tr>
             ))}

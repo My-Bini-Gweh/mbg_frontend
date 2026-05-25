@@ -6,7 +6,6 @@ import { BalanceCard } from "@/components/cards/BalanceCard";
 import { QuickActionCard } from "@/components/cards/QuickActionCard";
 import { StatCard } from "@/components/cards/StatCard";
 import { TransactionTable } from "@/components/tables/TransactionTable";
-import { studentProfile, transactions as mockTransactions } from "@/data/mock";
 import {
   getProfile,
   getSession,
@@ -15,6 +14,15 @@ import {
   mapStudentProfile,
 } from "@/lib/api";
 import type { StudentProfile, Transaction } from "@/types";
+
+const initialStudent: StudentProfile = {
+  name: "-",
+  nim: "-",
+  campusPayId: "-",
+  balance: 0,
+  monthlyTransactionCount: 0,
+  status: "ACTIVE",
+};
 
 const quickActions = [
   {
@@ -39,10 +47,9 @@ const quickActions = [
 
 export function DashboardHome() {
   const router = useRouter();
-  const [student, setStudent] = useState<StudentProfile>(studentProfile);
-  const [transactions, setTransactions] =
-    useState<Transaction[]>(mockTransactions);
-  const [status, setStatus] = useState("Memuat data backend...");
+  const [student, setStudent] = useState<StudentProfile>(initialStudent);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [status, setStatus] = useState("Memuat data transaksi...");
 
   useEffect(() => {
     let active = true;
@@ -67,13 +74,13 @@ export function DashboardHome() {
 
         setTransactions(apiTransactions);
         setStudent(mapStudentProfile(profile, wallet, apiTransactions.length));
-        setStatus("Data terbaru dari backend.");
+        setStatus("Data transaksi tersinkron dari server.");
       } catch (err) {
         if (active) {
           setStatus(
             err instanceof Error
               ? err.message
-              : "Gagal memuat data backend",
+              : "Gagal memuat data transaksi",
           );
         }
       }
@@ -89,7 +96,10 @@ export function DashboardHome() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 lg:grid-cols-[1.2fr_2fr]">
-        <BalanceCard balance={student.balance} campusPayId={student.campusPayId} />
+        <BalanceCard
+          balance={student.balance}
+          campusPayId={student.campusPayId}
+        />
         <div className="grid gap-4 sm:grid-cols-3">
           <StatCard
             title="Nama Mahasiswa"
@@ -114,7 +124,7 @@ export function DashboardHome() {
           <div>
             <h2 className="text-lg font-bold text-slate-950">Quick Actions</h2>
             <p className="mt-1 text-sm text-slate-500">
-              Akses cepat ke alur utama CampusPay.
+              Akses cepat ke alur utama pembayaran kampus.
             </p>
           </div>
         </div>

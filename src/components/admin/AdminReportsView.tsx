@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ReportTable } from "@/components/tables/ReportTable";
-import { dailyReports as mockDailyReports } from "@/data/mock";
 import { getDailyReports, getSession } from "@/lib/api";
 import type { DailyReport } from "@/types";
 
 export function AdminReportsView() {
   const router = useRouter();
-  const [reports, setReports] = useState<DailyReport[]>(mockDailyReports);
+  const [reports, setReports] = useState<DailyReport[]>([]);
   const [status, setStatus] = useState("Memuat laporan harian...");
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export function AdminReportsView() {
         const rows = await getDailyReports(session.token);
         if (active) {
           setReports(rows);
-          setStatus("Laporan harian dari backend.");
+          setStatus("Laporan harian tersinkron dari server.");
         }
       } catch (err) {
         if (active) {

@@ -1,4 +1,4 @@
-export type TransactionType = "TOPUP" | "PAYMENT" | "TRANSFER";
+export type TransactionType = "TOPUP" | "PAYMENT";
 
 export type TransactionStatus = "SUCCESS" | "PENDING" | "FAILED";
 
@@ -58,7 +58,7 @@ export type DailyReport = {
   totalAmount: number;
   totalTopup: number;
   totalPayment: number;
-  totalTransfer: number;
+  totalSuccessfulTransactions: number;
 };
 
 export type AdminSummary = {

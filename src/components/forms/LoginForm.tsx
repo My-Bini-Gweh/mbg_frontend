@@ -32,7 +32,7 @@ export function LoginForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <label className="block">
         <span className="text-sm font-semibold text-slate-700">
-          Email atau NIM
+          Email
         </span>
         <input
           value={emailOrNim}

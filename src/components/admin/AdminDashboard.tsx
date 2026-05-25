@@ -1,28 +1,30 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StatCard } from "@/components/cards/StatCard";
 import { ReportTable } from "@/components/tables/ReportTable";
-import { adminSummary, auditLogs, dailyReports, transactions } from "@/data/mock";
 import { formatCurrency, formatDate } from "@/lib/format";
 import {
-  getAdminTransactions,
+  getAdminSummary,
   getAuditLogs,
   getDailyReports,
-  getMerchants,
   getSession,
-  mapAdminSummary,
 } from "@/lib/api";
-import type { AuditLog, DailyReport, Merchant, Transaction } from "@/types";
+import type { AdminSummary, AuditLog, DailyReport } from "@/types";
+
+const initialSummary: AdminSummary = {
+  totalUsers: 0,
+  totalMerchants: 0,
+  totalTransactions: 0,
+  totalSuccessfulAmount: 0,
+};
 
 export function AdminDashboard() {
   const router = useRouter();
-  const [transactionRows, setTransactionRows] =
-    useState<Transaction[]>(transactions);
-  const [logRows, setLogRows] = useState<AuditLog[]>(auditLogs);
-  const [reportRows, setReportRows] = useState<DailyReport[]>(dailyReports);
-  const [merchantRows, setMerchantRows] = useState<Merchant[]>([]);
+  const [summary, setSummary] = useState<AdminSummary>(initialSummary);
+  const [logRows, setLogRows] = useState<AuditLog[]>([]);
+  const [reportRows, setReportRows] = useState<DailyReport[]>([]);
   const [status, setStatus] = useState("Memuat data admin...");
 
   useEffect(() => {
@@ -36,23 +38,21 @@ export function AdminDashboard() {
       }
 
       try {
-        const [apiTransactions, apiLogs, apiReports, apiMerchants] =
+        const [apiSummary, apiLogs, apiReports] =
           await Promise.all([
-            getAdminTransactions(session.token),
+            getAdminSummary(session.token),
             getAuditLogs(session.token),
             getDailyReports(session.token),
-            getMerchants(),
           ]);
 
         if (!active) {
           return;
         }
 
-        setTransactionRows(apiTransactions);
+        setSummary(apiSummary);
         setLogRows(apiLogs);
         setReportRows(apiReports);
-        setMerchantRows(apiMerchants);
-        setStatus("Data admin dari backend.");
+        setStatus("Data operasional tersinkron dari server.");
       } catch (err) {
         if (active) {
           setStatus(
@@ -68,16 +68,6 @@ export function AdminDashboard() {
       active = false;
     };
   }, [router]);
-
-  const summary = useMemo(() => {
-    const mappedSummary = mapAdminSummary(transactionRows, merchantRows);
-    return {
-      ...mappedSummary,
-      totalUsers: adminSummary.totalUsers,
-      totalMerchants:
-        mappedSummary.totalMerchants || adminSummary.totalMerchants,
-    };
-  }, [merchantRows, transactionRows]);
 
   return (
     <div className="space-y-6">

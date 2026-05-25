@@ -1,8 +1,8 @@
 import type {
   AccountStatus,
+  AdminSummary,
   AuditLog,
   DailyReport,
-  Merchant,
   StudentProfile,
   Transaction,
   TransactionStatus,
@@ -87,6 +87,13 @@ type BackendDailyReport = {
   total_topup: string;
   total_payment: string;
   total_transaksi_success: number;
+};
+
+type BackendAdminSummary = {
+  total_users: number;
+  total_merchants: number;
+  total_transactions: number;
+  total_successful_amount: string;
 };
 
 export type AuthSession = {
@@ -189,6 +196,13 @@ export async function getAdminTransactions(token: string) {
   return rows.map(mapTransaction);
 }
 
+export async function getAdminSummary(token: string) {
+  const summary = await request<BackendAdminSummary>("/api/admin/summary", {
+    token,
+  });
+  return mapAdminSummary(summary);
+}
+
 export async function getAuditLogs(token: string) {
   const rows = await request<BackendAuditLog[]>("/api/admin/audit-logs", {
     token,
@@ -259,17 +273,12 @@ export function mapStudentProfile(
   };
 }
 
-export function mapAdminSummary(
-  transactions: Transaction[],
-  merchants: Merchant[],
-) {
+function mapAdminSummary(summary: BackendAdminSummary): AdminSummary {
   return {
-    totalUsers: 0,
-    totalMerchants: merchants.length,
-    totalTransactions: transactions.length,
-    totalSuccessfulAmount: transactions
-      .filter((transaction) => transaction.status === "SUCCESS")
-      .reduce((total, transaction) => total + transaction.amount, 0),
+    totalUsers: summary.total_users,
+    totalMerchants: summary.total_merchants,
+    totalTransactions: summary.total_transactions,
+    totalSuccessfulAmount: Number(summary.total_successful_amount),
   };
 }
 
@@ -311,7 +320,7 @@ function mapDailyReport(row: BackendDailyReport): DailyReport {
     totalAmount: Number(row.total_nominal),
     totalTopup: Number(row.total_topup),
     totalPayment: Number(row.total_payment),
-    totalTransfer: 0,
+    totalSuccessfulTransactions: row.total_transaksi_success,
   };
 }
 

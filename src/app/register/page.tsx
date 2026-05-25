@@ -17,7 +17,7 @@ export default function RegisterPage() {
             Register
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Buat akun demo mahasiswa untuk masuk ke dashboard.
+            Daftarkan akun mahasiswa untuk mulai menggunakan CampusPay.
           </p>
         </div>
         <div className="mt-6">

@@ -37,7 +37,6 @@ export function getTransactionTypeLabel(type: TransactionType) {
   const labels: Record<TransactionType, string> = {
     TOPUP: "Top Up",
     PAYMENT: "Pembayaran",
-    TRANSFER: "Transfer",
   };
 
   return labels[type];
@@ -47,7 +46,6 @@ export function getTransactionTypeBadgeStyle(type: TransactionType) {
   const styles: Record<TransactionType, string> = {
     TOPUP: "bg-indigo-50 text-indigo-700 ring-indigo-200",
     PAYMENT: "bg-sky-50 text-sky-700 ring-sky-200",
-    TRANSFER: "bg-violet-50 text-violet-700 ring-violet-200",
   };
 
   return styles[type];

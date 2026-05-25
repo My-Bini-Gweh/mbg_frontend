@@ -1,13 +1,13 @@
 # ITSPay
 
-ITSPay adalah demo sistem pembayaran digital kampus untuk Final Project Manajemen Basis Data.
+ITSPay adalah sistem pembayaran digital kampus dengan frontend Next.js dan backend Go Gin + MySQL.
 
 Repo ini berisi:
 
 - `src/`: frontend Next.js.
-- `../mbg_backend/`: backend Go Gin + MySQL untuk demo database.
+- `../mbg_backend/`: backend Go Gin + MySQL.
 
-## Backend Demo
+## Backend
 
 Masuk ke folder backend:
 
@@ -34,7 +34,13 @@ Backend menonjolkan:
 
 ## Frontend
 
-Jalankan dari root repo:
+Buat konfigurasi lokal:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+```
+
+Jalankan dari folder frontend:
 
 ```bash
 bun install

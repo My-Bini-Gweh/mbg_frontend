@@ -1,5 +1,14 @@
 import { PaymentForm } from "@/components/forms/PaymentForm";
-import { merchants, studentProfile } from "@/data/mock";
+import type { StudentProfile } from "@/types";
+
+const initialStudent: StudentProfile = {
+  name: "-",
+  nim: "-",
+  campusPayId: "-",
+  balance: 0,
+  monthlyTransactionCount: 0,
+  status: "ACTIVE",
+};
 
 export default function PayPage() {
   return (
@@ -10,7 +19,7 @@ export default function PayPage() {
           Pembayaran ke merchant kampus dengan ringkasan pembayaran.
         </p>
       </div>
-      <PaymentForm merchants={merchants} student={studentProfile} />
+      <PaymentForm merchants={[]} student={initialStudent} />
     </div>
   );
 }

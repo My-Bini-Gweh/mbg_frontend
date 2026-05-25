@@ -17,7 +17,7 @@ export default function LoginPage() {
             Login
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Masuk ke dashboard demo mahasiswa CampusPay.
+            Masuk ke dashboard CampusPay untuk mengelola saldo dan transaksi.
           </p>
         </div>
         <div className="mt-6">

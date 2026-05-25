@@ -1,4 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { clearSession, getSession } from "@/lib/api";
 
 type TopbarProps = {
   title: string;
@@ -11,6 +16,24 @@ type TopbarProps = {
 };
 
 export function Topbar({ title, subtitle, userLabel, navItems }: TopbarProps) {
+  const router = useRouter();
+  const [activeUser] = useState(() => {
+    const session = getSession();
+    if (!session) {
+      return userLabel;
+    }
+
+    return `${session.mahasiswa.nama_mahasiswa} / ${
+      session.mahasiswa.role ?? "mahasiswa"
+    }`;
+  });
+
+  function handleLogout() {
+    clearSession();
+    router.push("/login");
+    router.refresh();
+  }
+
   return (
     <header className="border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-6 lg:px-8">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -33,8 +56,15 @@ export function Topbar({ title, subtitle, userLabel, navItems }: TopbarProps) {
             ))}
           </div>
           <div className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">
-            {userLabel}
+            {activeUser}
           </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-red-200 hover:text-red-700"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </header>

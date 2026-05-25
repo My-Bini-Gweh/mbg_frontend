@@ -11,8 +11,8 @@ export default function AdminLayout({
     <DashboardLayout
       navItems={ADMIN_NAV_ITEMS}
       title="Admin CampusPay"
-      subtitle="Database Monitoring"
-      userLabel="Admin Demo"
+      subtitle="Operations Console"
+      userLabel="Administrator"
     >
       {children}
     </DashboardLayout>

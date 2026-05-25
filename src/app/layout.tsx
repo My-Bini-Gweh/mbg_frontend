@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CampusPay",
-  description: "Sistem pembayaran digital kampus untuk demo basis data.",
+  description: "Sistem pembayaran digital kampus terintegrasi.",
 };
 
 export default function RootLayout({

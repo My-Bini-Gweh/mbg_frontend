@@ -1,7 +1,15 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { formatCurrency } from "@/lib/format";
+import {
+  createPayment,
+  getMerchants,
+  getProfile,
+  getSession,
+  getWallet,
+  mapStudentProfile,
+} from "@/lib/api";
 import type { Merchant, StudentProfile } from "@/types";
 
 type PaymentFormProps = {
@@ -10,22 +18,100 @@ type PaymentFormProps = {
 };
 
 export function PaymentForm({ merchants, student }: PaymentFormProps) {
+  const [merchantOptions, setMerchantOptions] = useState(merchants);
+  const [studentData, setStudentData] = useState(student);
+  const [walletId, setWalletId] = useState(student.campusPayId);
   const [merchantId, setMerchantId] = useState(merchants[0]?.id ?? "");
   const [amount, setAmount] = useState("25000");
   const [note, setNote] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadInitialData() {
+      const session = getSession();
+      if (!session) {
+        setFeedback("Silakan login untuk memproses pembayaran.");
+        return;
+      }
+
+      try {
+        const [apiMerchants, profile, wallet] = await Promise.all([
+          getMerchants(),
+          getProfile(session.token),
+          getWallet(session.token),
+        ]);
+
+        if (!active) {
+          return;
+        }
+
+        const nextMerchants =
+          apiMerchants.length > 0 ? apiMerchants : merchants;
+        setMerchantOptions(nextMerchants);
+        setMerchantId((current) =>
+          nextMerchants.some((merchant) => merchant.id === current)
+            ? current
+            : (nextMerchants[0]?.id ?? ""),
+        );
+        setWalletId(wallet.id_wallet);
+        setStudentData(mapStudentProfile(profile, wallet));
+      } catch (err) {
+        if (active) {
+          setFeedback(
+            err instanceof Error
+              ? err.message
+              : "Gagal memuat data pembayaran",
+          );
+        }
+      }
+    }
+
+    loadInitialData();
+
+    return () => {
+      active = false;
+    };
+  }, [merchants]);
 
   const selectedMerchant = useMemo(
-    () => merchants.find((merchant) => merchant.id === merchantId),
-    [merchantId, merchants],
+    () => merchantOptions.find((merchant) => merchant.id === merchantId),
+    [merchantId, merchantOptions],
   );
   const numericAmount = Number(amount || 0);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const payload = { merchantId, amount: numericAmount, note };
+    setFeedback("");
+    const session = getSession();
 
-    console.log("payment payload", payload);
-    alert("Pembayaran dummy berhasil diproses.");
+    if (!session) {
+      setFeedback("Silakan login untuk memproses pembayaran.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const wallet = await createPayment(session.token, {
+        wallet_id: walletId,
+        merchant_id: merchantId,
+        nominal: numericAmount,
+      });
+
+      setWalletId(wallet.id_wallet);
+      setStudentData((current) => ({
+        ...current,
+        balance: Number(wallet.saldo),
+        campusPayId: wallet.id_wallet,
+      }));
+      setFeedback("Pembayaran berhasil diproses.");
+    } catch (err) {
+      setFeedback(err instanceof Error ? err.message : "Pembayaran gagal");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -44,7 +130,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
             required
             className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-100"
           >
-            {merchants.map((merchant) => (
+            {merchantOptions.map((merchant) => (
               <option key={merchant.id} value={merchant.id}>
                 {merchant.name}
               </option>
@@ -95,7 +181,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
           <div className="flex justify-between gap-4">
             <dt className="text-slate-500">Dari</dt>
             <dd className="font-semibold text-slate-800">
-              {student.campusPayId}
+              {studentData.campusPayId}
             </dd>
           </div>
           <div className="flex justify-between gap-4">
@@ -111,11 +197,17 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
             </dd>
           </div>
         </dl>
+        {feedback ? (
+          <p className="mt-4 rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700">
+            {feedback}
+          </p>
+        ) : null}
         <button
           type="submit"
+          disabled={isSubmitting}
           className="mt-6 w-full rounded-2xl bg-indigo-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-800"
         >
-          Bayar
+          {isSubmitting ? "Memproses..." : "Bayar"}
         </button>
       </aside>
     </form>

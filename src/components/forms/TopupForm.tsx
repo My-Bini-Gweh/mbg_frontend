@@ -1,7 +1,15 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { formatCurrency } from "@/lib/format";
+import {
+  createTopup,
+  getBanks,
+  getProfile,
+  getSession,
+  getWallet,
+  mapStudentProfile,
+} from "@/lib/api";
 import type { Bank, StudentProfile } from "@/types";
 
 type TopupFormProps = {
@@ -10,22 +18,97 @@ type TopupFormProps = {
 };
 
 export function TopupForm({ banks, student }: TopupFormProps) {
+  const [bankOptions, setBankOptions] = useState(banks);
+  const [studentData, setStudentData] = useState(student);
+  const [walletId, setWalletId] = useState(student.campusPayId);
   const [bankId, setBankId] = useState(banks[0]?.id ?? "");
   const [amount, setAmount] = useState("100000");
   const [note, setNote] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadInitialData() {
+      const session = getSession();
+      if (!session) {
+        setFeedback("Silakan login untuk memproses top up.");
+        return;
+      }
+
+      try {
+        const [apiBanks, profile, wallet] = await Promise.all([
+          getBanks(),
+          getProfile(session.token),
+          getWallet(session.token),
+        ]);
+
+        if (!active) {
+          return;
+        }
+
+        const nextBanks = apiBanks.length > 0 ? apiBanks : banks;
+        setBankOptions(nextBanks);
+        setBankId((current) =>
+          nextBanks.some((bank) => bank.id === current)
+            ? current
+            : (nextBanks[0]?.id ?? ""),
+        );
+        setWalletId(wallet.id_wallet);
+        setStudentData(mapStudentProfile(profile, wallet));
+      } catch (err) {
+        if (active) {
+          setFeedback(
+            err instanceof Error ? err.message : "Gagal memuat data top up",
+          );
+        }
+      }
+    }
+
+    loadInitialData();
+
+    return () => {
+      active = false;
+    };
+  }, [banks]);
 
   const selectedBank = useMemo(
-    () => banks.find((bank) => bank.id === bankId),
-    [bankId, banks],
+    () => bankOptions.find((bank) => bank.id === bankId),
+    [bankId, bankOptions],
   );
   const numericAmount = Number(amount || 0);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const payload = { bankId, amount: numericAmount, note };
+    setFeedback("");
+    const session = getSession();
 
-    console.log("topup payload", payload);
-    alert("Top up dummy berhasil dibuat.");
+    if (!session) {
+      setFeedback("Silakan login untuk memproses top up.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const wallet = await createTopup(session.token, {
+        wallet_id: walletId,
+        bank_id: Number(bankId),
+        nominal: numericAmount,
+      });
+
+      setWalletId(wallet.id_wallet);
+      setStudentData((current) => ({
+        ...current,
+        balance: Number(wallet.saldo),
+        campusPayId: wallet.id_wallet,
+      }));
+      setFeedback("Top up berhasil diproses.");
+    } catch (err) {
+      setFeedback(err instanceof Error ? err.message : "Top up gagal");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -44,7 +127,7 @@ export function TopupForm({ banks, student }: TopupFormProps) {
             required
             className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-100"
           >
-            {banks.map((bank) => (
+            {bankOptions.map((bank) => (
               <option key={bank.id} value={bank.id}>
                 {bank.name}
               </option>
@@ -91,7 +174,7 @@ export function TopupForm({ banks, student }: TopupFormProps) {
           <div className="flex justify-between gap-4">
             <dt className="text-slate-500">Tujuan</dt>
             <dd className="font-semibold text-slate-800">
-              {student.campusPayId}
+              {studentData.campusPayId}
             </dd>
           </div>
           <div className="flex justify-between gap-4">
@@ -101,11 +184,17 @@ export function TopupForm({ banks, student }: TopupFormProps) {
             </dd>
           </div>
         </dl>
+        {feedback ? (
+          <p className="mt-4 rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700">
+            {feedback}
+          </p>
+        ) : null}
         <button
           type="submit"
+          disabled={isSubmitting}
           className="mt-6 w-full rounded-2xl bg-indigo-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-800"
         >
-          Submit Top Up
+          {isSubmitting ? "Memproses..." : "Submit Top Up"}
         </button>
       </aside>
     </form>

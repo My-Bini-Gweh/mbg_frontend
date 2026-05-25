@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { register, saveSession } from "@/lib/api";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -10,20 +11,34 @@ export function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError("");
 
     if (password !== confirmPassword) {
-      alert("Password dan konfirmasi password belum sama.");
+      setError("Password dan konfirmasi password belum sama.");
       return;
     }
 
-    const payload = { name, nim, email, password, confirmPassword };
-
-    console.log("register payload", payload);
-    alert("Register dummy berhasil. Redirect ke dashboard.");
-    router.push("/dashboard");
+    setIsSubmitting(true);
+    try {
+      const session = await register({
+        nrp: nim,
+        nama_mahasiswa: name,
+        email,
+        password,
+      });
+      saveSession(session);
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Register gagal");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -83,15 +98,21 @@ export function RegisterForm() {
             onChange={(event) => setConfirmPassword(event.target.value)}
             required
             className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-100"
-            placeholder="Ulangi password"
+          placeholder="Ulangi password"
           />
         </label>
       </div>
+      {error ? (
+        <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+          {error}
+        </p>
+      ) : null}
       <button
         type="submit"
+        disabled={isSubmitting}
         className="w-full rounded-2xl bg-indigo-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-800"
       >
-        Register
+        {isSubmitting ? "Memproses..." : "Register"}
       </button>
     </form>
   );

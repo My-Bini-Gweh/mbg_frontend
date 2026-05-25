@@ -20,7 +20,6 @@ export const STUDENT_NAV_ITEMS = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Top Up", href: "/dashboard/topup" },
   { label: "Bayar Merchant", href: "/dashboard/pay" },
-  { label: "Transfer", href: "/dashboard/transfer" },
   { label: "Riwayat Transaksi", href: "/dashboard/transactions" },
 ];
 

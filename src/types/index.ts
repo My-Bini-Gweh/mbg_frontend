@@ -2,12 +2,7 @@ export type TransactionType = "TOPUP" | "PAYMENT" | "TRANSFER";
 
 export type TransactionStatus = "SUCCESS" | "PENDING" | "FAILED";
 
-export type AuditAction =
-  | "REGISTER_USER"
-  | "TOPUP_SUCCESS"
-  | "PAYMENT_SUCCESS"
-  | "PAYMENT_FAILED"
-  | "TRANSFER_SUCCESS";
+export type AuditAction = string;
 
 export type AccountStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
 

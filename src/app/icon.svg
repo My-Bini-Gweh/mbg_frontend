@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="9" fill="url(#purpleGrad)"/>
+  <path d="M18 12V10a2 2 0 00-2-2H10a2 2 0 00-2 2v6a2 2 0 002 2h2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 14h8a2 2 0 012 2v6a2 2 0 01-2 2H14a2 2 0 01-2-2v-6a2 2 0 012-2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M19.5 18a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" fill="white"/>
+</svg>

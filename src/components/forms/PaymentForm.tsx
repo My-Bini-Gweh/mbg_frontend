@@ -25,6 +25,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
   const [amount, setAmount] = useState("25000");
   const [note, setNote] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [feedbackType, setFeedbackType] = useState<"success" | "error" | "info">("info");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
       const session = getSession();
       if (!session) {
         setFeedback("Silakan login untuk memproses pembayaran.");
+        setFeedbackType("error");
         return;
       }
 
@@ -65,6 +67,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
               ? err.message
               : "Gagal memuat data pembayaran",
           );
+          setFeedbackType("error");
         }
       }
     }
@@ -89,6 +92,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
 
     if (!session) {
       setFeedback("Silakan login untuk memproses pembayaran.");
+      setFeedbackType("error");
       return;
     }
 
@@ -107,19 +111,45 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
         campusPayId: wallet.id_wallet,
       }));
       setFeedback("Pembayaran berhasil diproses.");
+      setFeedbackType("success");
     } catch (err) {
       setFeedback(err instanceof Error ? err.message : "Pembayaran gagal");
+      setFeedbackType("error");
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  const feedbackStyles = {
+    success: "bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/20",
+    error: "bg-red-500/10 text-red-300 ring-1 ring-red-500/20",
+    info: "bg-slate-800 text-slate-200 ring-1 ring-slate-700",
+  };
+
+  const feedbackIcons = {
+    success: (
+      <svg className="size-5 shrink-0 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    error: (
+      <svg className="size-5 shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+    ),
+    info: (
+      <svg className="size-5 shrink-0 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:grid-cols-[1fr_360px]"
+      className="grid gap-6 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm lg:grid-cols-[1fr_360px]"
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
         <label className="block">
           <span className="text-sm font-semibold text-slate-700">
             Pilih Merchant
@@ -128,7 +158,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
             value={merchantId}
             onChange={(event) => setMerchantId(event.target.value)}
             required
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-100"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300 cursor-pointer"
           >
             {merchantOptions.map((merchant) => (
               <option key={merchant.id} value={merchant.id}>
@@ -144,7 +174,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
           <input
             value={selectedMerchant?.category ?? ""}
             readOnly
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-600 outline-none"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-600 outline-none cursor-default"
           />
         </label>
         <label className="block">
@@ -158,7 +188,7 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
             required
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-100"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300"
           />
         </label>
         <label className="block">
@@ -169,46 +199,63 @@ export function PaymentForm({ merchants, student }: PaymentFormProps) {
             value={note}
             onChange={(event) => setNote(event.target.value)}
             rows={4}
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-100"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300 resize-none"
             placeholder="Contoh: pembayaran makan siang"
           />
         </label>
       </div>
 
-      <aside className="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
-        <p className="text-sm font-bold text-slate-950">Payment Summary</p>
-        <dl className="mt-4 space-y-3 text-sm">
-          <div className="flex justify-between gap-4">
-            <dt className="text-slate-500">Dari</dt>
-            <dd className="font-semibold text-slate-800">
-              {studentData.campusPayId}
-            </dd>
+      <aside className="rounded-2xl bg-slate-950 text-white overflow-hidden shadow-lg border border-slate-900 flex flex-col justify-between">
+        <div>
+          <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-700 px-5 py-4 border-b border-slate-900">
+            <p className="text-sm font-bold text-white tracking-wide">Payment Summary</p>
           </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-slate-500">Merchant</dt>
-            <dd className="font-semibold text-slate-800">
-              {selectedMerchant?.name ?? "-"}
-            </dd>
+          <div className="p-5">
+            <dl className="space-y-4 text-sm">
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-400">Dari</dt>
+                <dd className="font-semibold text-slate-100">
+                  {studentData.campusPayId}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-400">Merchant</dt>
+                <dd className="font-semibold text-indigo-300">
+                  {selectedMerchant?.name ?? "-"}
+                </dd>
+              </div>
+              <div className="h-px bg-slate-900" />
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-400">Nominal</dt>
+                <dd className="text-xl font-bold text-white">
+                  {formatCurrency(numericAmount)}
+                </dd>
+              </div>
+            </dl>
+            {feedback ? (
+              <div className={`mt-4 flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold animate-slide-down ${feedbackStyles[feedbackType]}`}>
+                {feedbackIcons[feedbackType]}
+                <span>{feedback}</span>
+              </div>
+            ) : null}
           </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-slate-500">Nominal</dt>
-            <dd className="font-semibold text-slate-950">
-              {formatCurrency(numericAmount)}
-            </dd>
-          </div>
-        </dl>
-        {feedback ? (
-          <p className="mt-4 rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700">
-            {feedback}
-          </p>
-        ) : null}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-6 w-full rounded-2xl bg-indigo-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-800"
-        >
-          {isSubmitting ? "Memproses..." : "Bayar"}
-        </button>
+        </div>
+        <div className="p-5 pt-0">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-3.5 text-sm font-bold text-white shadow-md transition hover:shadow-lg hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-md disabled:hover:brightness-100 cursor-pointer"
+          >
+            {isSubmitting ? (
+              <>
+                <span className="spinner" />
+                Memproses...
+              </>
+            ) : (
+              "Bayar"
+            )}
+          </button>
+        </div>
       </aside>
     </form>
   );

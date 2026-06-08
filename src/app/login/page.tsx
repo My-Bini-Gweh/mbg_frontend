@@ -4,15 +4,23 @@ import { APP_NAME } from "@/lib/constants";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
-      <section className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-2xl bg-indigo-700 text-sm font-bold text-white">
-            CP
+    <main className="relative flex min-h-screen items-center justify-center px-4 py-10 overflow-hidden">
+      {/* Background */}
+      <div className="pointer-events-none absolute inset-0 bg-page-gradient" />
+      <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-gradient-to-br from-indigo-200/40 to-violet-200/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-gradient-to-tr from-sky-200/30 to-blue-200/30 blur-3xl" />
+
+      <section className="relative w-full max-w-md animate-slide-up rounded-2xl border border-slate-200/80 bg-white/80 p-8 shadow-lg backdrop-blur-sm">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-sm transition group-hover:shadow-md group-hover:scale-105">
+            <svg className="size-5.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
           </div>
           <span className="text-lg font-bold text-slate-950">{APP_NAME}</span>
         </Link>
-        <div className="mt-8">
+
+        <div className="mt-8 border-t border-slate-100 pt-6">
           <h1 className="text-2xl font-bold tracking-tight text-slate-950">
             Login
           </h1>
@@ -20,12 +28,14 @@ export default function LoginPage() {
             Masuk ke dashboard CampusPay untuk mengelola saldo dan transaksi.
           </p>
         </div>
+
         <div className="mt-6">
           <LoginForm />
         </div>
-        <p className="mt-6 text-center text-sm text-slate-500">
+
+        <p className="mt-8 text-center text-sm text-slate-500">
           Belum punya akun?{" "}
-          <Link href="/register" className="font-bold text-indigo-700">
+          <Link href="/register" className="font-bold text-indigo-600 transition hover:text-indigo-800">
             Register
           </Link>
         </p>

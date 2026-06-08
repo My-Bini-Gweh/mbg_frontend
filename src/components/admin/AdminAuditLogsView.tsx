@@ -10,6 +10,7 @@ export function AdminAuditLogsView() {
   const router = useRouter();
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [status, setStatus] = useState("Memuat audit logs...");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -33,6 +34,10 @@ export function AdminAuditLogsView() {
             err instanceof Error ? err.message : "Gagal memuat audit logs",
           );
         }
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
       }
     }
 
@@ -44,10 +49,19 @@ export function AdminAuditLogsView() {
   }, [router]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-slide-up">
       <div>
         <h2 className="text-xl font-bold text-slate-950">Audit Logs</h2>
-        <p className="mt-1 text-sm leading-6 text-slate-500">{status}</p>
+        <div className="mt-1.5">
+          {isLoading ? (
+            <span className="inline-flex items-center gap-2 text-sm text-slate-500">
+              <span className="spinner-dark" style={{ width: 14, height: 14 }} />
+              {status}
+            </span>
+          ) : (
+            <p className="text-sm leading-6 text-slate-500">{status}</p>
+          )}
+        </div>
       </div>
       <AuditLogTable logs={logs} />
     </div>

@@ -50,6 +50,7 @@ export function DashboardHome() {
   const [student, setStudent] = useState<StudentProfile>(initialStudent);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [status, setStatus] = useState("Memuat data transaksi...");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -83,6 +84,10 @@ export function DashboardHome() {
               : "Gagal memuat data transaksi",
           );
         }
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
       }
     }
 
@@ -94,33 +99,38 @@ export function DashboardHome() {
   }, [router]);
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 lg:grid-cols-[1.2fr_2fr]">
+    <div className="space-y-8">
+      {/* Balance + Stats */}
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_2fr] animate-slide-up stagger-children">
         <BalanceCard
           balance={student.balance}
           campusPayId={student.campusPayId}
         />
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-3 stagger-children">
           <StatCard
             title="Nama Mahasiswa"
             value={student.name}
             description={student.nim}
+            accent="bg-blue-500"
           />
           <StatCard
             title="Transaksi Bulan Ini"
             value={`${student.monthlyTransactionCount}`}
             description="Transaksi aktif di akun ini."
+            accent="bg-violet-500"
           />
           <StatCard
             title="Status Akun"
             value={student.status}
             description="Siap digunakan untuk transaksi."
+            accent="bg-emerald-500"
           />
         </div>
       </div>
 
-      <section>
-        <div className="mb-4 flex items-end justify-between gap-4">
+      {/* Quick Actions */}
+      <section className="animate-slide-up" style={{ animationDelay: "100ms" }}>
+        <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <h2 className="text-lg font-bold text-slate-950">Quick Actions</h2>
             <p className="mt-1 text-sm text-slate-500">
@@ -128,19 +138,32 @@ export function DashboardHome() {
             </p>
           </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 stagger-children">
           {quickActions.map((action) => (
             <QuickActionCard key={action.href} {...action} />
           ))}
         </div>
       </section>
 
-      <section>
-        <div className="mb-4">
+      {/* Recent Transactions */}
+      <section className="animate-slide-up" style={{ animationDelay: "200ms" }}>
+        <div className="mb-5">
           <h2 className="text-lg font-bold text-slate-950">
             Recent Transactions
           </h2>
-          <p className="mt-1 text-sm text-slate-500">{status}</p>
+          <div className="mt-1.5 flex items-center gap-2">
+            {isLoading ? (
+              <span className="inline-flex items-center gap-2 text-sm text-slate-500">
+                <span className="spinner-dark" style={{ width: 14, height: 14 }} />
+                {status}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                <span className="pulse-dot bg-emerald-500" style={{ width: 6, height: 6 }} />
+                {status}
+              </span>
+            )}
+          </div>
         </div>
         <TransactionTable
           transactions={transactions}

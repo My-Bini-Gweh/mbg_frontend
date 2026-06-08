@@ -10,6 +10,7 @@ export function AdminReportsView() {
   const router = useRouter();
   const [reports, setReports] = useState<DailyReport[]>([]);
   const [status, setStatus] = useState("Memuat laporan harian...");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -33,6 +34,10 @@ export function AdminReportsView() {
             err instanceof Error ? err.message : "Gagal memuat laporan harian",
           );
         }
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
       }
     }
 
@@ -44,12 +49,21 @@ export function AdminReportsView() {
   }, [router]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-slide-up">
       <div>
         <h2 className="text-xl font-bold text-slate-950">
           Daily Transaction Report
         </h2>
-        <p className="mt-1 text-sm leading-6 text-slate-500">{status}</p>
+        <div className="mt-1.5">
+          {isLoading ? (
+            <span className="inline-flex items-center gap-2 text-sm text-slate-500">
+              <span className="spinner-dark" style={{ width: 14, height: 14 }} />
+              {status}
+            </span>
+          ) : (
+            <p className="text-sm leading-6 text-slate-500">{status}</p>
+          )}
+        </div>
       </div>
       <ReportTable reports={reports} />
     </div>

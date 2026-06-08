@@ -7,23 +7,28 @@ type BalanceCardProps = {
 
 export function BalanceCard({ balance, campusPayId }: BalanceCardProps) {
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-indigo-700 via-blue-700 to-sky-600 p-6 text-white shadow-sm">
-      <div className="flex items-start justify-between gap-4">
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-violet-700 to-indigo-800 p-6 text-white shadow-lg">
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/5" />
+      <div className="pointer-events-none absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5" />
+
+      <div className="relative flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-blue-100">Saldo CampusPay</p>
+          <p className="text-sm font-medium text-indigo-200">Saldo CampusPay</p>
           <p className="mt-3 text-3xl font-bold tracking-tight">
             {formatCurrency(balance)}
           </p>
         </div>
-        <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold ring-1 ring-white/20">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold ring-1 ring-white/20">
+          <span className="pulse-dot bg-emerald-400" />
           ACTIVE
         </span>
       </div>
-      <div className="mt-8 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
-        <p className="text-xs uppercase tracking-[0.2em] text-blue-100">
+      <div className="relative mt-8 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur-sm">
+        <p className="text-xs uppercase tracking-[0.2em] text-indigo-200">
           CampusPay ID
         </p>
-        <p className="mt-2 text-lg font-semibold">{campusPayId}</p>
+        <p className="mt-2 text-lg font-semibold tracking-wide">{campusPayId}</p>
       </div>
     </div>
   );

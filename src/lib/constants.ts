@@ -1,6 +1,6 @@
 import type { TransactionStatus, TransactionType } from "@/types";
 
-export const APP_NAME = "CampusPay";
+export const APP_NAME = "ITSPay";
 
 export const TRANSACTION_TYPE_FILTERS: Array<TransactionType | "ALL"> = [
   "ALL",

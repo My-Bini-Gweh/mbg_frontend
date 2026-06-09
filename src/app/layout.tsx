@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CampusPay",
+  title: "ITSPay",
   description: "Sistem pembayaran digital kampus terintegrasi.",
 };
 

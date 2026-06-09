@@ -14,7 +14,7 @@ export function BalanceCard({ balance, campusPayId }: BalanceCardProps) {
 
       <div className="relative flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-indigo-200">Saldo CampusPay</p>
+          <p className="text-sm font-medium text-indigo-200">Saldo ITSPay</p>
           <p className="mt-3 text-3xl font-bold tracking-tight">
             {formatCurrency(balance)}
           </p>
@@ -26,7 +26,7 @@ export function BalanceCard({ balance, campusPayId }: BalanceCardProps) {
       </div>
       <div className="relative mt-8 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur-sm">
         <p className="text-xs uppercase tracking-[0.2em] text-indigo-200">
-          CampusPay ID
+          ITSPay ID
         </p>
         <p className="mt-2 text-lg font-semibold tracking-wide">{campusPayId}</p>
       </div>

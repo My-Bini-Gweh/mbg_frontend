@@ -11,7 +11,7 @@ export default function StudentDashboardLayout({
     <DashboardLayout
       navItems={STUDENT_NAV_ITEMS}
       title="Dashboard Mahasiswa"
-      subtitle="CampusPay Student"
+      subtitle="ITSPay Student"
       userLabel="Mahasiswa"
     >
       {children}

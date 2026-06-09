@@ -10,7 +10,7 @@ export default function AdminLayout({
   return (
     <DashboardLayout
       navItems={ADMIN_NAV_ITEMS}
-      title="Admin CampusPay"
+      title="Admin ITSPay"
       subtitle="Operations Console"
       userLabel="Administrator"
     >

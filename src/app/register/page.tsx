@@ -25,7 +25,7 @@ export default function RegisterPage() {
             Register
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Daftarkan akun mahasiswa untuk mulai menggunakan CampusPay.
+            Daftarkan akun mahasiswa untuk mulai menggunakan ITSPay.
           </p>
         </div>
 

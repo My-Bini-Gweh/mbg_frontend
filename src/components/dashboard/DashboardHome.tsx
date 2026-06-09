@@ -39,7 +39,7 @@ const quickActions = [
   },
   {
     title: "Riwayat Transaksi",
-    description: "Cek detail dan status transaksi CampusPay.",
+    description: "Cek detail dan status transaksi ITSPay.",
     href: "/dashboard/transactions",
     marker: "RT",
   },

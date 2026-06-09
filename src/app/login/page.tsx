@@ -25,7 +25,7 @@ export default function LoginPage() {
             Login
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Masuk ke dashboard CampusPay untuk mengelola saldo dan transaksi.
+            Masuk ke dashboard ITSPay untuk mengelola saldo dan transaksi.
           </p>
         </div>
 

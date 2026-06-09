@@ -90,11 +90,10 @@ export function Sidebar({ brand, navItems }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`group relative flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
-                active
+              className={`group relative flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition ${active
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-900/30"
                   : "text-slate-400 hover:bg-slate-800 hover:text-white"
-              }`}
+                }`}
             >
               {/* Active indicator bar */}
               {active ? (
@@ -114,7 +113,7 @@ export function Sidebar({ brand, navItems }: SidebarProps) {
       {/* Bottom decoration */}
       <div className="mt-auto pt-6 border-t border-slate-800">
         <div className="rounded-2xl bg-slate-800/50 p-4 border border-slate-800">
-          <p className="text-xs font-semibold text-indigo-400">CampusPay v1.0</p>
+          <p className="text-xs font-semibold text-indigo-400">ITSPay v1.0</p>
           <p className="mt-1 text-xs text-slate-400">Powered by Database</p>
         </div>
       </div>

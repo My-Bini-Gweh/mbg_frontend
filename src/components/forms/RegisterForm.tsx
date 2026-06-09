@@ -54,12 +54,12 @@ export function RegisterForm() {
             onChange={(event) => setName(event.target.value)}
             required
             className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300"
-            placeholder="Alya Putri"
+            placeholder="Muhammad Quthbi Danish Abqori"
           />
         </div>
       </label>
       <label className="block">
-        <span className="text-sm font-semibold text-slate-700">NIM</span>
+        <span className="text-sm font-semibold text-slate-700">NRP</span>
         <div className="relative mt-2">
           <svg className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 size-4.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
@@ -69,7 +69,7 @@ export function RegisterForm() {
             onChange={(event) => setNim(event.target.value)}
             required
             className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300"
-            placeholder="5025241148"
+            placeholder="5025241036"
           />
         </div>
       </label>

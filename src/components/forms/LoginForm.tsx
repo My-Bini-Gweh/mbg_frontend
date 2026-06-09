@@ -41,7 +41,7 @@ export function LoginForm() {
             onChange={(event) => setEmailOrNim(event.target.value)}
             required
             className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300"
-            placeholder="alya@itspay.test"
+            placeholder="5025241148@student.its.ac.id"
           />
         </div>
       </label>

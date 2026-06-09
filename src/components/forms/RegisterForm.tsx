@@ -69,7 +69,7 @@ export function RegisterForm() {
             onChange={(event) => setNim(event.target.value)}
             required
             className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300"
-            placeholder="235150700111001"
+            placeholder="5025241148"
           />
         </div>
       </label>
@@ -85,7 +85,7 @@ export function RegisterForm() {
             onChange={(event) => setEmail(event.target.value)}
             required
             className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 hover:border-slate-300"
-            placeholder="alya@student.ac.id"
+            placeholder="5025241148@student.its.ac.id"
           />
         </div>
       </label>

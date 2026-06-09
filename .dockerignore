@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+*.md
+LICENSE
+.github/
+node_modules/
+.next/
+out/
+build/

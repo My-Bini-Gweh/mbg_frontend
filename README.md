@@ -52,3 +52,19 @@ Frontend berjalan di:
 ```text
 http://localhost:3000
 ```
+
+## Admin Panel
+
+Login dengan akun admin lalu buka `/admin`. Menu pengelolaan tersedia di:
+
+- `/admin/mahasiswa`
+- `/admin/auth-records`
+- `/admin/wallets`
+- `/admin/banks`
+- `/admin/accounts`
+- `/admin/merchants`
+- `/admin/transactions`
+- `/admin/audit-logs`
+- `/admin/reports`
+
+Mahasiswa, bank, rekening, dan merchant mendukung create/edit/delete. Wallet hanya mengizinkan perubahan jenis wallet; saldo, credential, transaksi, audit log, dan laporan tidak dapat dimutasi langsung untuk menjaga konsistensi proses finansial database. Halaman credential menampilkan hash password dan PIN secara utuh khusus untuk admin aktif.

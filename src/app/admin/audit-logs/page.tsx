@@ -1,5 +1,5 @@
-import { AdminAuditLogsView } from "@/components/admin/AdminAuditLogsView";
+import { AdminEntityManager } from "@/components/admin/AdminEntityManager";
 
 export default function AdminAuditLogsPage() {
-  return <AdminAuditLogsView />;
+  return <AdminEntityManager entity="audit-logs" />;
 }

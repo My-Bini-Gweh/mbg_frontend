@@ -1,5 +1,5 @@
-import { AdminReportsView } from "@/components/admin/AdminReportsView";
+import { AdminEntityManager } from "@/components/admin/AdminEntityManager";
 
 export default function AdminReportsPage() {
-  return <AdminReportsView />;
+  return <AdminEntityManager entity="reports" />;
 }

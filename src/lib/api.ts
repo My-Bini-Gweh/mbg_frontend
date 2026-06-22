@@ -1,5 +1,7 @@
 import type {
   AccountStatus,
+  AdminPage,
+  AdminRecord,
   AdminSummary,
   AuditLog,
   DailyReport,
@@ -190,10 +192,11 @@ export async function getTransactions(token: string) {
 }
 
 export async function getAdminTransactions(token: string) {
-  const rows = await request<BackendTransaction[]>("/api/admin/transactions", {
-    token,
-  });
-  return rows.map(mapTransaction);
+  const result = await request<AdminPage<BackendTransaction>>(
+    "/api/admin/transactions?per_page=100",
+    { token },
+  );
+  return result.items.map(mapTransaction);
 }
 
 export async function getAdminSummary(token: string) {
@@ -204,17 +207,90 @@ export async function getAdminSummary(token: string) {
 }
 
 export async function getAuditLogs(token: string) {
-  const rows = await request<BackendAuditLog[]>("/api/admin/audit-logs", {
-    token,
-  });
-  return rows.map(mapAuditLog);
+  const result = await request<AdminPage<BackendAuditLog>>(
+    "/api/admin/audit-logs?per_page=100",
+    { token },
+  );
+  return result.items.map(mapAuditLog);
 }
 
 export async function getDailyReports(token: string) {
-  const rows = await request<BackendDailyReport[]>("/api/admin/reports/daily", {
-    token,
+  const result = await request<AdminPage<BackendDailyReport>>(
+    "/api/admin/reports/daily?per_page=100",
+    { token },
+  );
+  return result.items.map(mapDailyReport);
+}
+
+export type AdminListQuery = {
+  page?: number;
+  perPage?: number;
+  search?: string;
+  sort?: string;
+  order?: "asc" | "desc";
+  filters?: Record<string, string>;
+};
+
+export async function listAdminEntity(
+  token: string,
+  endpoint: string,
+  query: AdminListQuery = {},
+) {
+  const params = new URLSearchParams();
+  params.set("page", String(query.page ?? 1));
+  params.set("per_page", String(query.perPage ?? 20));
+  if (query.search) params.set("search", query.search);
+  if (query.sort) params.set("sort", query.sort);
+  if (query.order) params.set("order", query.order);
+  Object.entries(query.filters ?? {}).forEach(([key, value]) => {
+    if (value) params.set(key, value);
   });
-  return rows.map(mapDailyReport);
+  return request<AdminPage<AdminRecord>>(
+    `/api/admin/${endpoint}?${params.toString()}`,
+    { token },
+  );
+}
+
+export function getAdminEntity(token: string, endpoint: string, id: string) {
+  return request<AdminRecord>(
+    `/api/admin/${endpoint}/${encodeURIComponent(id)}`,
+    { token },
+  );
+}
+
+export function createAdminEntity(
+  token: string,
+  endpoint: string,
+  input: AdminRecord,
+) {
+  return request<AdminRecord>(`/api/admin/${endpoint}`, {
+    method: "POST",
+    token,
+    body: JSON.stringify(input),
+  });
+}
+
+export function updateAdminEntity(
+  token: string,
+  endpoint: string,
+  id: string,
+  input: AdminRecord,
+) {
+  return request<AdminRecord>(
+    `/api/admin/${endpoint}/${encodeURIComponent(id)}`,
+    { method: "PUT", token, body: JSON.stringify(input) },
+  );
+}
+
+export function deleteAdminEntity(
+  token: string,
+  endpoint: string,
+  id: string,
+) {
+  return request<AdminRecord>(
+    `/api/admin/${endpoint}/${encodeURIComponent(id)}`,
+    { method: "DELETE", token },
+  );
 }
 
 export async function getBanks() {

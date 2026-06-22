@@ -78,7 +78,7 @@ export function Sidebar({ brand, navItems }: SidebarProps) {
         </div>
       </Link>
 
-      <nav className="mt-8 flex-1 space-y-1">
+      <nav className="mt-8 flex-1 space-y-1 overflow-y-auto pr-1">
         {navItems.map((item) => {
           const active =
             pathname === item.href ||

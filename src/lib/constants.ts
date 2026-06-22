@@ -24,6 +24,12 @@ export const STUDENT_NAV_ITEMS = [
 
 export const ADMIN_NAV_ITEMS = [
   { label: "Dashboard Admin", href: "/admin", icon: "admin" },
+  { label: "Mahasiswa", href: "/admin/mahasiswa", icon: "admin" },
+  { label: "Credential", href: "/admin/auth-records", icon: "audit-logs" },
+  { label: "Wallet", href: "/admin/wallets", icon: "topup" },
+  { label: "Bank", href: "/admin/banks", icon: "reports" },
+  { label: "Rekening", href: "/admin/accounts", icon: "pay" },
+  { label: "Merchant", href: "/admin/merchants", icon: "pay" },
   { label: "Transaksi", href: "/admin/transactions", icon: "transactions" },
   { label: "Audit Logs", href: "/admin/audit-logs", icon: "audit-logs" },
   { label: "Laporan", href: "/admin/reports", icon: "reports" },

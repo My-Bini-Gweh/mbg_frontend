@@ -68,6 +68,20 @@ export type AdminSummary = {
   totalSuccessfulAmount: number;
 };
 
+export type AdminRecord = Record<string, unknown>;
+
+export type AdminPagination = {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+};
+
+export type AdminPage<T = AdminRecord> = {
+  items: T[];
+  pagination: AdminPagination;
+};
+
 export type LandingFeature = {
   title: string;
   description: string;
